@@ -1,0 +1,33 @@
+# Source files
+src/
+examples/
+
+# Configuration
+tsconfig.json
+.eslintrc.js
+.prettierrc
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+
+# Tests
+*.spec.ts
+*.test.ts
+coverage/
+
+# Misc
+.env
+.env.*
+*.log
+.DS_Store
+
+# Documentation (keep README.md)
+docs/
+
+# Postman collection
+*.postman_collection.json
