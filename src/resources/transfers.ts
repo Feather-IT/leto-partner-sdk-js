@@ -1,9 +1,11 @@
 import { HttpClient } from '../client/http-client';
 import {
+  ApiResponse,
   Transfer,
   TransferAuthCodeVerifyRequest,
   TransferAuthCodeVerifyResult,
   TransferInitiateRequest,
+  TransferListQuery,
 } from '../types';
 
 /**
@@ -51,5 +53,13 @@ export class Transfers {
       `/api/v1/domains/transfer/${transferId}`
     );
     return response.data;
+  }
+
+  /**
+   * List transfer status for the tenant
+   * @param query - Pagination options
+   */
+  async list(query?: TransferListQuery): Promise<ApiResponse<Transfer[]>> {
+    return this.client.get<Transfer[]>('/api/v1/domains/transfer', query);
   }
 }

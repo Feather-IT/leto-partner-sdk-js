@@ -58,7 +58,7 @@ export interface Domain {
   transferLock: boolean;
   transferAutoReject: boolean;
   updateLock: boolean;
-  contact: DomainContactFull;
+  contact?: DomainContactFull;
   contactId: DomainContactIds;
   metadata: Record<string, any>;
 }
@@ -198,7 +198,12 @@ export interface TLDRules {
     min: number;
     max: number;
   };
-  additionalContactData?: string[];
+  additionalContactData?: (string | unknown)[];
+}
+
+export interface TldListQuery {
+  page?: number;
+  size?: number;
 }
 
 // ============================================================================
@@ -271,27 +276,38 @@ export interface DNSSECUpdate {
 // ============================================================================
 
 export type TransferStatus =
-  | 'pending'
-  | 'in_progress'
+  | 'processing'
   | 'completed'
   | 'failed'
-  | 'rejected';
+  | 'cancelled'
+  | 'pending_out'
+  | 'rejected_out'
+  | 'approved_out'
+  | 'unknown';
 
 export type TransferDirection = 'in' | 'out';
 
 export interface Transfer {
   transferId: string;
-  transactionId: string;
+  transactionId: string | null;
   status: TransferStatus;
   direction: TransferDirection;
   domainName: string;
-  fromRegistrar?: string;
-  toRegistrar?: string;
+  fromRegistrar?: string | null;
+  inTenantId?: string | null;
+  registryCode?: string | null;
+  registryTransferId?: string | null;
   nameservers: string[];
-  createdDate: Timestamp;
-  updatedDate: Timestamp;
-  expiredDate: Timestamp;
-  authCode?: string;
+  createdDate?: Timestamp;
+  updatedDate?: Timestamp;
+  expiredDate?: Timestamp;
+  requestedAt?: Timestamp;
+  completedAt?: Timestamp | null;
+  authCode?: string | null;
+  errorMessage?: string | null;
+  errorCode?: string | null;
+  registryStatus?: string;
+  registryData?: Record<string, unknown> | null;
 }
 
 export interface TransferAuthCodeVerifyRequest {
@@ -312,6 +328,11 @@ export interface TransferInitiateRequest {
   period?: number;
   nameservers?: string[];
   contact?: DomainContactIds;
+}
+
+export interface TransferListQuery {
+  page?: number;
+  size?: number;
 }
 
 // ============================================================================
@@ -396,5 +417,4 @@ export interface LetoConfig {
   serviceToken: string;
   baseUrl?: string;
   timeout?: number;
-  retries?: number;
 }

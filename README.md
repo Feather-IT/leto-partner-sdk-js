@@ -85,7 +85,6 @@ console.log(`Domain registered: ${domain.domainName}`);
 | `serviceToken` | string | Yes | - | Your service token from partner portal |
 | `baseUrl` | string | No | `https://api.leto.kr` | API base URL |
 | `timeout` | number | No | `30000` | Request timeout in milliseconds |
-| `retries` | number | No | `3` | Number of retry attempts |
 
 ## API Reference
 
@@ -124,6 +123,7 @@ const response = await client.domains.list({
   search: 'example',
 });
 // Returns paginated list with response.data, response.pagination
+// Note: contact info may be omitted; use contactId fields.
 ```
 
 #### Get Domain Details
@@ -334,8 +334,16 @@ const transfer = await client.transfers.initiate({
 
 ```typescript
 const transfer = await client.transfers.get('transfer-uuid');
-console.log(transfer.status); // pending, in_progress, completed, failed, rejected
+console.log(transfer.status); // processing, completed, failed, cancelled, pending_out, rejected_out, approved_out, unknown
 console.log(transfer.direction); // in or out
+```
+
+#### List Transfers
+
+```typescript
+const transfers = await client.transfers.list({ page: 1, size: 20 });
+console.log(transfers.data); // array of transfers
+console.log(transfers.pagination); // { page, size, total, totalPages }
 ```
 
 ### TLDs
@@ -343,8 +351,9 @@ console.log(transfer.direction); // in or out
 #### List All TLDs
 
 ```typescript
-const tlds = await client.tlds.list();
-// Returns array of all TLDs with pricing and rules
+const tldResponse = await client.tlds.list({ page: 1, size: 20 });
+console.log(tldResponse.data); // array of TLDs with pricing and rules
+console.log(tldResponse.pagination); // { page, size, total, totalPages }
 ```
 
 #### Get Specific TLD

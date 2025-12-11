@@ -38,7 +38,6 @@ export class HttpClient {
     this.config = {
       baseUrl: 'https://api.leto.kr',
       timeout: 30000,
-      retries: 3,
       ...config,
     };
 

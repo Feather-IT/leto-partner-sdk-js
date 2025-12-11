@@ -1,5 +1,5 @@
 import { HttpClient } from '../client/http-client';
-import { TLD } from '../types';
+import { ApiResponse, TLD, TldListQuery } from '../types';
 
 /**
  * TLD Management Resource
@@ -10,11 +10,10 @@ export class TLDs {
 
   /**
    * Get all TLD pricing and rules
-   * @returns Array of all available TLDs with pricing and rules
+   * @returns Paginated list of available TLDs with pricing and rules
    */
-  async list(): Promise<TLD[]> {
-    const response = await this.client.get<TLD[]>('/api/v1/tlds');
-    return response.data;
+  async list(query?: TldListQuery): Promise<ApiResponse<TLD[]>> {
+    return this.client.get<TLD[]>('/api/v1/tlds', query);
   }
 
   /**
